@@ -25,7 +25,7 @@ rules // entities
     Entity{e} ===> entity_scope,
     Entity{e} : TEntity(Entity{e}),
     Entity{e}.ns := Entity(),
-    Entity{e}.constructor := FirstClassRelation(),
+    Entity{e}.constructor := Entity(),
     Implicit{"this"} <- entity_scope,
     Implicit{"this"} : TEntity(Entity{e}),
     Map2 [[ as ^ (entity_scope, module_scope) ]],

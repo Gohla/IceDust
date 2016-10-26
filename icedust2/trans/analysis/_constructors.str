@@ -19,7 +19,6 @@ signature constructors
   Left  : Side
   Right : Side
   
-  Entity             : Constructor
-  FirstClassRelation : Constructor
-  Trait              : Constructor
+  Entity : Constructor
+  Trait  : Constructor
   

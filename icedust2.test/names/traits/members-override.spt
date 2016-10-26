@@ -1,0 +1,20 @@
+module names-traits-members-override
+
+language icedust2
+
+fixture [[
+  module test
+  model
+  [[...]]
+]]
+
+test no error on overriding field [[
+  trait Assignment {
+    size : Int
+  }
+
+  entity BasicAssignment extends Assignment {
+    size : Int = 1
+  }
+]] 0 errors
+

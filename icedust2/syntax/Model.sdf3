@@ -36,7 +36,7 @@ context-free syntax // sugar: binary relation with attributes
     }
   ]
 
-context-free syntax // entity members
+context-free syntax // entity members: attributes
 
   Member.Attribute = <
     <ID> : <Type><Multiplicity?>
@@ -50,9 +50,13 @@ context-free syntax // entity members
     <ID> : <Type><Multiplicity?> = <Exp> (default)
   >
 
+context-free syntax // entity members: roles & inverses
+
   Member.Role = [
     [ID][DotID?] [Multiplicity?][Ordering?][SpaceArrowID?]
   ]
+
+context-free syntax // entity members: shortcuts
 
   Member.Shortcut = [
     [ID][DotID?] <-> [ID][DotID?]

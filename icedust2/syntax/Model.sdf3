@@ -6,30 +6,38 @@ imports
   Expressions
   Types
   
-context-free syntax
+context-free syntax // entities
 
   Model.Entity = <
-    entity <ID> {
+    entity <ID> <ExtendsExtends?>{
       <{Member "\n"}*>
     }
   >
   
   Model.FirstClassRelation = <
-    relation <ID> {
+    relation <ID> <ExtendsExtends?>{
       <{Member "\n"}*>
     }
   >
   
+  Extends.Extends = <<ID>>
+
+context-free syntax // relations
+
   Model.Relation = [
     relation [ID][DotID?][SpaceMultiplicity?][SpaceOrdering?] <->[SpaceMultiplicity?][SpaceOrdering?] [ID][DotID?]
   ]
-  
+
+context-free syntax // sugar: binary relation with attributes 
+
   Model.ShortcutRelation = [
     relation [ID][DotID?][SpaceMultiplicity?][SpaceOrdering?] <->[SpaceMultiplicity?][SpaceOrdering?] [ID][DotID?] {
       [{Member "\n"}*]
     }
   ]
-  
+
+context-free syntax // entity members
+
   Member.Attribute = <
     <ID> : <Type><Multiplicity?>
   >
@@ -50,7 +58,10 @@ context-free syntax
     [ID][DotID?] <-> [ID][DotID?]
   ]
   
+context-free syntax // pretty printer hacks
+  
   DotID             = <.<ID>>
   SpaceArrowID      = [ -> [ID]]
   SpaceMultiplicity = [ [Multiplicity]]
   SpaceOrdering     = [ [Ordering]]
+  ExtendsExtends    = [extends [{Extends ", "}+] ]

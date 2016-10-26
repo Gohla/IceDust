@@ -2,7 +2,7 @@ module model
 
 rules
 
-  [[ Entity(e, as) ^ (module_scope) ]] :=
+  [[ Entity(e, extends, as) ^ (module_scope) ]] :=
     distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
     Entity{e} <- module_scope,
     entity_scope ---> module_scope,
@@ -16,7 +16,7 @@ rules
     Entity2{e} <=I= entity_scope, // import all from that reference
     new entity_scope.
 
-  [[ FirstClassRelation(e, as) ^ (module_scope) ]] := // identical to Entity
+  [[ FirstClassRelation(e, as, extends) ^ (module_scope) ]] := // identical to Entity
     distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
     Entity{e} <- module_scope,
     entity_scope ---> module_scope,

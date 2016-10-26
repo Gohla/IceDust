@@ -11,18 +11,19 @@ imports // functions
 
 rules // entities
   
-  is-entity = ?Entity            (_,_)
-  is-entity = ?FirstClassRelation(_,_)
+  is-entity = ?Entity            (_,_,_)
+  is-entity = ?FirstClassRelation(_,_,_)
   
-  entity-get-name    = ?Entity            (<id>,_)
-  entity-get-name    = ?FirstClassRelation(<id>,_)
-  entity-get-members = ?Entity            (_, <id>)
-  entity-get-members = ?FirstClassRelation(_, <id>)
+  entity-get-name    = ?Entity            (<id>, _, _)
+  entity-get-name    = ?FirstClassRelation(<id>, _, _)
+  entity-get-members = ?Entity            (_, _, <id>)
+  entity-get-members = ?FirstClassRelation(_, _, <id>)
   
-  entity-set-members(|members) = entity-set-members(!members)
-  entity-set-members(members) = Entity            (id, members)
-  entity-set-members(members) = FirstClassRelation(id, members)
+  entity-set-members(members) = Entity            (id, id, members)
+  entity-set-members(members) = FirstClassRelation(id, id, members)
 
+  entity-set-members(|members) = entity-set-members(!members)
+  
 rules // attributes
 
   is-attr = ?Attribute(_, _, _)

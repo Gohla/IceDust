@@ -2,21 +2,7 @@ module model
 
 rules // entities
 
-  [[ Entity(e, extends, as) ^ (module_scope) ]] :=
-    distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
-    Entity{e} <- module_scope,
-    entity_scope ---> module_scope,
-    Entity{e} ===> entity_scope,
-    Entity{e} : TEntity(Entity{e}),
-    Entity{e}.ns := Entity(),
-    Implicit{"this"} <- entity_scope,
-    Implicit{"this"} : TEntity(Entity{e}),
-    Map2 [[ as ^ (entity_scope, module_scope) ]],
-    Entity2{e} -> module_scope,   // matches 0 or more times, one for each relation (like partial class definition)
-    Entity2{e} <=I= entity_scope, // import all from that reference
-    new entity_scope.
-
-  [[ FirstClassRelation(e, as, extends) ^ (module_scope) ]] := // identical to Entity
+  [[ Entity(e, parents, as) ^ (module_scope) ]] :=
     distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
     Entity{e} <- module_scope,
     entity_scope ---> module_scope,
@@ -28,7 +14,54 @@ rules // entities
     Map2 [[ as ^ (entity_scope, module_scope) ]],
     Entity2{e} -> module_scope,
     Entity2{e} <=I= entity_scope,
-    new entity_scope.
+    new entity_scope,
+    [[parents ^ (entity_scope)]].
+
+  [[ FirstClassRelation(e, parents, as) ^ (module_scope) ]] := // identical to Entity
+    distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
+    Entity{e} <- module_scope,
+    entity_scope ---> module_scope,
+    Entity{e} ===> entity_scope,
+    Entity{e} : TEntity(Entity{e}),
+    Entity{e}.ns := Entity(),
+    Implicit{"this"} <- entity_scope,
+    Implicit{"this"} : TEntity(Entity{e}),
+    Map2 [[ as ^ (entity_scope, module_scope) ]],
+    Entity2{e} -> module_scope,
+    Entity2{e} <=I= entity_scope,
+    new entity_scope,
+    [[parents ^ (entity_scope)]].
+
+  [[ Trait(e, parents, as) ^ (module_scope) ]] := // identical to Entity
+    distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
+    Entity{e} <- module_scope,
+    entity_scope ---> module_scope,
+    Entity{e} ===> entity_scope,
+    Entity{e} : TEntity(Entity{e}),
+    Entity{e}.ns := Entity(),
+    Implicit{"this"} <- entity_scope,
+    Implicit{"this"} : TEntity(Entity{e}),
+    Map2 [[ as ^ (entity_scope, module_scope) ]],
+    Entity2{e} -> module_scope,
+    Entity2{e} <=I= entity_scope,
+    new entity_scope,
+    [[parents ^ (entity_scope)]].
+  
+  [[ None() ^ (dont_care) ]] :=
+    true.
+    
+  [[ OptionalExtends(parents_list) ^ (entity_scope) ]] :=
+    Map1 [[ parents_list ^ (entity_scope) ]].
+  
+  [[ Extends(parent) ^ (entity_scope) ]] :=
+    Entity{parent} -> entity_scope,
+    Entity{parent} <=I= entity_scope,
+    Entity{parent} |-> parent_def,
+    parent_def : TEntity(parent_entity),
+    Implicit{"this"} -> entity_scope,
+    Implicit{"this"} |-> this_def,
+    this_def : TEntity(entity),
+    TEntity(entity) <! TEntity(parent_entity).
 
 rules // relations
     

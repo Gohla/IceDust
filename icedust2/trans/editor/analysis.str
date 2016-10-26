@@ -28,6 +28,8 @@ rules // Analysis: NaBL2 hooks
 
   nabl2-ignore-unused-references-hook = ?Namespace("Entity2")
   nabl2-ignore-unused-references-hook = ?Namespace("Member2")
+  
+  nabl2-allow-multiple-supertypes-hook = id
 
 //  debug-generate-constraint = id
 

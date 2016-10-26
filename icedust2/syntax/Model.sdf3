@@ -9,16 +9,24 @@ imports
 context-free syntax // entities
 
   Model.Entity = <
-    entity <ID> <ExtendsExtends?>{
+    entity <ID> <OptionalExtends?>{
       <{Member "\n"}*>
     }
   >
   
   Model.FirstClassRelation = <
-    relation <ID> <ExtendsExtends?>{
+    relation <ID> <OptionalExtends?>{
       <{Member "\n"}*>
     }
   >
+
+  Model.Trait = <
+    trait <ID> <OptionalExtends?>{
+      <{Member "\n"}*>
+    }
+  >
+  
+  OptionalExtends.OptionalExtends = [extends [{Extends ", "}+] ] // need a constructor to dispatch on in NaBL2
   
   Extends.Extends = <<ID>>
 
@@ -68,4 +76,3 @@ context-free syntax // pretty printer hacks
   SpaceArrowID      = [ -> [ID]]
   SpaceMultiplicity = [ [Multiplicity]]
   SpaceOrdering     = [ [Ordering]]
-  ExtendsExtends    = [extends [{Extends ", "}+] ]

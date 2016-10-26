@@ -13,14 +13,18 @@ rules // entities
   
   is-entity = ?Entity            (_,_,_)
   is-entity = ?FirstClassRelation(_,_,_)
+  is-entity = ?Trait             (_,_,_)
   
   entity-get-name    = ?Entity            (<id>, _, _)
   entity-get-name    = ?FirstClassRelation(<id>, _, _)
+  entity-get-name    = ?Trait             (<id>, _, _)
   entity-get-members = ?Entity            (_, _, <id>)
   entity-get-members = ?FirstClassRelation(_, _, <id>)
+  entity-get-members = ?Trait             (_, _, <id>)
   
   entity-set-members(members) = Entity            (id, id, members)
   entity-set-members(members) = FirstClassRelation(id, id, members)
+  entity-set-members(members) = Trait             (id, id, members)
 
   entity-set-members(|members) = entity-set-members(!members)
   

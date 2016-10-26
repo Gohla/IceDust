@@ -1,0 +1,19 @@
+module names-traits-parents-multiple
+
+language icedust2
+
+fixture [[
+  module test
+  model
+  [[...]]
+]]
+
+test resolve parent multiple [[
+  trait [[Assignment]] {
+  }
+
+  entity AssignmentCollection extends [[Assignment]], Foo {
+  }
+  
+  trait Foo{}
+]] resolve #2 to #1

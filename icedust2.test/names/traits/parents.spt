@@ -1,0 +1,25 @@
+module names-traits-parents
+
+language icedust2
+
+fixture [[
+  module test
+  model
+  [[...]]
+]]
+
+test resolve parent [[
+  trait [[Assignment]] {
+  }
+
+  entity AssignmentCollection extends [[Assignment]] {
+  }
+]] resolve #2 to #1
+
+test unresolved parent error [[
+  trait Assignment {
+  }
+
+  entity AssignmentCollection extends [[Foo]] {
+  }
+]] >= 1 error at #1

@@ -1,0 +1,28 @@
+module names-traits-members
+
+language icedust2
+
+fixture [[
+  module test
+  model
+  [[...]]
+]]
+
+test resolve member subtype [[
+  trait Assignment {
+    [[name]] : String
+  }
+
+  entity AssignmentCollection extends Assignment {
+    bla : String = [[name]]
+  }
+]] resolve #2 to #1
+
+test unresolved member error [[
+  trait Assignment {
+  }
+
+  entity AssignmentCollection extends Assignment {
+    bla : String = [[name]]
+  }
+]] >= 1 error at #1

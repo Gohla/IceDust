@@ -9,6 +9,7 @@ rules // entities
     Entity{e} ===> entity_scope,
     Entity{e} : TEntity(Entity{e}),
     Entity{e}.ns := Entity(),
+    Entity{e}.constructor := Entity(),
     Implicit{"this"} <- entity_scope,
     Implicit{"this"} : TEntity(Entity{e}),
     Map2 [[ as ^ (entity_scope, module_scope) ]],
@@ -17,13 +18,14 @@ rules // entities
     new entity_scope,
     [[parents ^ (entity_scope)]].
 
-  [[ FirstClassRelation(e, parents, as) ^ (module_scope) ]] := // identical to Entity
+  [[ FirstClassRelation(e, parents, as) ^ (module_scope) ]] :=
     distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
     Entity{e} <- module_scope,
     entity_scope ---> module_scope,
     Entity{e} ===> entity_scope,
     Entity{e} : TEntity(Entity{e}),
     Entity{e}.ns := Entity(),
+    Entity{e}.constructor := FirstClassRelation(),
     Implicit{"this"} <- entity_scope,
     Implicit{"this"} : TEntity(Entity{e}),
     Map2 [[ as ^ (entity_scope, module_scope) ]],
@@ -32,13 +34,14 @@ rules // entities
     new entity_scope,
     [[parents ^ (entity_scope)]].
 
-  [[ Trait(e, parents, as) ^ (module_scope) ]] := // identical to Entity
+  [[ Trait(e, parents, as) ^ (module_scope) ]] :=
     distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
     Entity{e} <- module_scope,
     entity_scope ---> module_scope,
     Entity{e} ===> entity_scope,
     Entity{e} : TEntity(Entity{e}),
     Entity{e}.ns := Entity(),
+    Entity{e}.constructor := Trait(),
     Implicit{"this"} <- entity_scope,
     Implicit{"this"} : TEntity(Entity{e}),
     Map2 [[ as ^ (entity_scope, module_scope) ]],
@@ -58,6 +61,7 @@ rules // entities
     Entity{parent} <=I= entity_scope,
     Entity{parent} |-> parent_def,
     parent_def : TEntity(parent_entity),
+    parent_def.constructor := Trait() | error "Only traits can be extended",
     Implicit{"this"} -> entity_scope,
     Implicit{"this"} |-> this_def,
     this_def : TEntity(entity),

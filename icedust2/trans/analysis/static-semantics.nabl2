@@ -40,20 +40,25 @@ signature
 
     labels
     //D // definition
+      S // must use import after this edge (used for override checks)
+      E // external                        (used for relations, inverses and shortcuts)
+      I // import                          (used for subtype imports)
       P // parent
-      I // import   (used for subtype imports)
-      E // external (used for relations, inverses and shortcuts)
 
     order
-      D < I,
-      E < I,
+      D < S,
       D < P,
+      D < I,
+      D < E,
+      S < P,
+      S < I,
+      S < E,
       E < P,
+      E < I,
       I < P
 
     well-formedness
-//      P* . I*
-      P* . (E|I)*
+      P* . (e|(S.(E|I))) . (E|I)*
 
 rules
 

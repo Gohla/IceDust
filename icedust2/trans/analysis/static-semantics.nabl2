@@ -13,6 +13,7 @@ imports
   model
   module
   types
+  map3
 
 signature
 
@@ -35,6 +36,25 @@ signature
     TUnordered()
     
     TTuple(type, type, type)        // type, mult, ord
+
+  name resolution
+
+    labels
+    //D // definition
+      I // import   (used for subtype imports)
+      E // external (used for relations, inverses and shortcuts)
+      P // parent
+
+    order
+      D < I,
+      D < E,
+      D < P,
+      I < E,
+      I < P,
+      E < P
+
+    well-formedness
+      P* . (E|I)*
 
 rules
 

@@ -112,16 +112,7 @@ rules // entity members: attributes
     Member{a}.derivationtype := Normal(),
     Member{a}.reltype := None(),
     [[ t ^ (entity_scope) : a_type ]],
-    [[ m ^ (entity_scope) : a_mult ]],
-    
-    new s,
-    Member{a} -> s,
-    s -S-> entity_scope,
-    s -I-> entity_scope,
-    Member{a} |-> a_overridden,
-    a_overridden : TTuple(a_overridden_type, a_overridden_mult, a_overridden_ord),
-    IsSubtype(a_overridden_type, a_type) == None() | error $[Overriding type error: expected [a_type] got [e_type].]@t,
-    InBounds (a_overridden_mult, a_mult) == None() | error $[Overriding multiplicity error: expected [a_mult] got [e_mult].]@m.
+    [[ m ^ (entity_scope) : a_mult ]].
     
   [[ DerivationAttribute(a, t, m, e) ^ (entity_scope, module_scope) ]] :=
     Member{a} <- entity_scope,
@@ -134,16 +125,7 @@ rules // entity members: attributes
     [[ m ^ (entity_scope) : a_mult ]],
     [[ e ^ (entity_scope) : TTuple(e_type, e_mult, e_ord) ]],
     IsSubtype(a_type, e_type) == None() | error $[Type error: expected [a_type] got [e_type].]@e,
-    InBounds (a_mult, e_mult) == None() | error $[Multiplicity error: expected [a_mult] got [e_mult].]@e,
-    
-    new s,
-    Member{a} -> s,
-    s -S-> entity_scope,
-    s -I-> entity_scope,
-    Member{a} |-> a_overridden,
-    a_overridden : TTuple(a_overridden_type, a_overridden_mult, a_overridden_ord),
-    IsSubtype(a_overridden_type, a_type) == None() | error $[Overriding type error: expected [a_type] got [e_type].]@t,
-    InBounds (a_overridden_mult, a_mult) == None() | error $[Overriding multiplicity error: expected [a_mult] got [e_mult].]@m.
+    InBounds (a_mult, e_mult) == None() | error $[Multiplicity error: expected [a_mult] got [e_mult].]@e.
     
   [[ DefaultAttribute(a, t, m, e) ^ (entity_scope, module_scope) ]] :=
     Member{a} <- entity_scope,
@@ -156,16 +138,7 @@ rules // entity members: attributes
     [[ m ^ (entity_scope) : a_mult ]],
     [[ e ^ (entity_scope) : TTuple(e_type, e_mult, e_ord) ]],
     IsSubtype(a_type, e_type) == None() | error $[Type error: expected [a_type] got [e_type].]@e,
-    InBounds (a_mult, e_mult) == None() | error $[Multiplicity error: expected [a_mult] got [e_mult].]@e,
-    
-    new s,
-    Member{a} -> s,
-    s -S-> entity_scope,
-    s -I-> entity_scope,
-    Member{a} |-> a_overridden,
-    a_overridden : TTuple(a_overridden_type, a_overridden_mult, a_overridden_ord),
-    IsSubtype(a_overridden_type, a_type) == None() | error $[Overriding type error: expected [a_type] got [e_type].]@t,
-    InBounds (a_overridden_mult, a_mult) == None() | error $[Overriding multiplicity error: expected [a_mult] got [e_mult].]@m.
+    InBounds (a_mult, e_mult) == None() | error $[Multiplicity error: expected [a_mult] got [e_mult].]@e.
     
 rules // entity members: roles & inverses
     

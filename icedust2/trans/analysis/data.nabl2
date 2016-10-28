@@ -4,7 +4,7 @@ rules
 
   [[ EntityInstance(name, type, ms) ^ (member_value_scope, module_scope) : type_type ]] :=
     Member{name} <- module_scope,
-    Member{name} =I=> entity_instance_scope,
+    Member{name} ===> entity_instance_scope,
     Member{name}.ns := EntityInstance(),
     new entity_instance_scope,
     [[ type ^ (module_scope) : type_type ]],
@@ -19,7 +19,7 @@ rules
 
   [[ EntityInstanceNoType(name, ms) ^ (member_value_scope, module_scope) : member_value_def_type ]] :=
     Member{name} <- module_scope,
-    Member{name} =I=> entity_instance_scope,
+    Member{name} ===> entity_instance_scope,
     Member{name}.ns := EntityInstance(),
     new entity_instance_scope,
     Implicit{"membervalue"} -> member_value_scope,
@@ -38,7 +38,7 @@ rules
     
   [[ RelationInstance(name, type, ms) ^ (member_value_scope, module_scope) : type_type ]] :=
     Member{name} <- module_scope,
-    Member{name} =I=> entity_instance_scope,
+    Member{name} ===> entity_instance_scope,
     Member{name}.ns := EntityInstance(),
     new entity_instance_scope,
     [[ type ^ (module_scope) : type_type ]],
@@ -58,7 +58,7 @@ rules
     
   [[ RelationInstanceNoType(name, ms) ^ (member_value_scope, module_scope) : relation_object_type ]] :=
     Member{name} <- module_scope,
-    Member{name} =I=> entity_instance_scope,
+    Member{name} ===> entity_instance_scope,
     Member{name}.ns := EntityInstance(),
     new entity_instance_scope,
     Implicit{"membervalue"} -> member_value_scope,

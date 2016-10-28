@@ -8,16 +8,16 @@ fixture [[
   [[...]]
 ]]
 
-test no error on overriding field [[
-  trait Assignment {
-    size : Int
-  }
-
-  entity BasicAssignment extends Assignment {
-    size : Int = 1
-  }
-]] 0 errors
-
+//test no error on overriding field [[
+//  trait Assignment {
+//    size : Int
+//  }
+//
+//  entity BasicAssignment extends Assignment {
+//    size : Int = 1
+//  }
+//]] 0 errors
+//
 //test error on overriding field with wrong type [[
 //  trait Assignment {
 //    size : Int

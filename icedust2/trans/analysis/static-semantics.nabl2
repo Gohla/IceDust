@@ -36,6 +36,30 @@ signature
     
     TTuple(type, type, type)        // type, mult, ord
 
+  name resolution
+
+    labels
+    //D // definition
+      S // must use import after this edge (used for override checks)
+      E // external                        (used for relations, inverses and shortcuts)
+      I // import                          (used for subtype imports)
+      P // parent
+
+    order
+      D < S,
+      D < P,
+      D < I,
+      D < E,
+      S < P,
+      S < I,
+      S < E,
+      E < P,
+      E < I,
+      I < P
+
+    well-formedness
+      P* . (e|(S.(E|I))) . (E|I)*
+
 rules
 
   init ^ (init_scope) :=

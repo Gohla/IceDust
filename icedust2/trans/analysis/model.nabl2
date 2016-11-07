@@ -3,9 +3,10 @@ module model
 rules // entities
 
   [[ Entity(e, parents, as) ^ (module_scope) ]] :=
-    distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
+    distinct V(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
+    distinct (W(entity_scope)/Member minus V(entity_scope)/Member) | error $[Conflicting attribute, relation, role, inverse, or shortcut names: [NAME]] @parents, 
     Entity{e} <- module_scope,
-    entity_scope -P-> module_scope,
+    entity_scope ---> module_scope,
     Entity{e} =I=> entity_scope,
     Entity{e} : TEntity(Entity{e}),
     Entity{e}.ns := Entity(),
@@ -14,14 +15,15 @@ rules // entities
     Implicit{"this"} : TEntity(Entity{e}),
     Map2 [[ as ^ (entity_scope, module_scope) ]],
     Entity2{e} -> module_scope,
-    Entity2{e} <=I= entity_scope,
+    Entity2{e} <=E= entity_scope,
+//    Entity2{e} <=I= entity_scope,
     new entity_scope,
     [[parents ^ (entity_scope)]].
 
   [[ FirstClassRelation(e, parents, as) ^ (module_scope) ]] :=
-    distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
+    distinct V(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
     Entity{e} <- module_scope,
-    entity_scope -P-> module_scope,
+    entity_scope ---> module_scope,
     Entity{e} =I=> entity_scope,
     Entity{e} : TEntity(Entity{e}),
     Entity{e}.ns := Entity(),
@@ -30,14 +32,15 @@ rules // entities
     Implicit{"this"} : TEntity(Entity{e}),
     Map2 [[ as ^ (entity_scope, module_scope) ]],
     Entity2{e} -> module_scope,
-    Entity2{e} <=I= entity_scope,
+    Entity2{e} <=E= entity_scope,
+//    Entity2{e} <=I= entity_scope,
     new entity_scope,
     [[parents ^ (entity_scope)]].
 
   [[ Trait(e, parents, as) ^ (module_scope) ]] :=
-    distinct W(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
+    distinct V(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
     Entity{e} <- module_scope,
-    entity_scope -P-> module_scope,
+    entity_scope ---> module_scope,
     Entity{e} =I=> entity_scope,
     Entity{e} : TEntity(Entity{e}),
     Entity{e}.ns := Entity(),
@@ -46,7 +49,8 @@ rules // entities
     Implicit{"this"} : TEntity(Entity{e}),
     Map2 [[ as ^ (entity_scope, module_scope) ]],
     Entity2{e} -> module_scope,
-    Entity2{e} <=I= entity_scope,
+    Entity2{e} <=E= entity_scope,
+//    Entity2{e} <=I= entity_scope,
     new entity_scope,
     [[parents ^ (entity_scope)]].
   
@@ -71,7 +75,7 @@ rules // relations
     
   [[ Relation(e1, r1, m1, o1, m2, o2, e2, r2) ^ (module_scope) ]] :=
     Entity2{e1} <- module_scope,
-    Entity2{e1} =I=> entity1_scope,
+    Entity2{e1} =E=> entity1_scope,
     Member{r1} <- entity1_scope,
     Entity{e1} -> module_scope,
     Entity{e1} |-> e1_def,
@@ -84,7 +88,7 @@ rules // relations
     Member{r1}.side := Left(),
     Member{r1}.reltype := None(),
     Entity2{e2} <- module_scope,
-    Entity2{e2} =I=> entity2_scope,
+    Entity2{e2} =E=> entity2_scope,
     Member{r2} <- entity2_scope,
     Entity{e2} -> module_scope,
     Entity{e2} |-> e2_def,
@@ -108,7 +112,16 @@ rules // entity members: attributes
     Member{a}.derivationtype := Normal(),
     Member{a}.reltype := None(),
     [[ t ^ (entity_scope) : a_type ]],
-    [[ m ^ (entity_scope) : a_mult ]].
+    [[ m ^ (entity_scope) : a_mult ]],
+    
+    new s,
+    Member{a} -> s,
+    s -S-> entity_scope,
+    s -I-> entity_scope,
+    Member{a} |-> a_overridden,
+    a_overridden : TTuple(a_overridden_type, a_overridden_mult, a_overridden_ord),
+    IsSubtype(a_overridden_type, a_type) == None() | error $[Overriding type error: expected [a_type] got [e_type].]@t,
+    InBounds (a_overridden_mult, a_mult) == None() | error $[Overriding multiplicity error: expected [a_mult] got [e_mult].]@m.
     
   [[ DerivationAttribute(a, t, m, e) ^ (entity_scope, module_scope) ]] :=
     Member{a} <- entity_scope,
@@ -121,7 +134,16 @@ rules // entity members: attributes
     [[ m ^ (entity_scope) : a_mult ]],
     [[ e ^ (entity_scope) : TTuple(e_type, e_mult, e_ord) ]],
     IsSubtype(a_type, e_type) == None() | error $[Type error: expected [a_type] got [e_type].]@e,
-    InBounds (a_mult, e_mult) == None() | error $[Multiplicity error: expected [a_mult] got [e_mult].]@e.
+    InBounds (a_mult, e_mult) == None() | error $[Multiplicity error: expected [a_mult] got [e_mult].]@e,
+    
+    new s,
+    Member{a} -> s,
+    s -S-> entity_scope,
+    s -I-> entity_scope,
+    Member{a} |-> a_overridden,
+    a_overridden : TTuple(a_overridden_type, a_overridden_mult, a_overridden_ord),
+    IsSubtype(a_overridden_type, a_type) == None() | error $[Overriding type error: expected [a_type] got [e_type].]@t,
+    InBounds (a_overridden_mult, a_mult) == None() | error $[Overriding multiplicity error: expected [a_mult] got [e_mult].]@m.
     
   [[ DefaultAttribute(a, t, m, e) ^ (entity_scope, module_scope) ]] :=
     Member{a} <- entity_scope,
@@ -134,7 +156,16 @@ rules // entity members: attributes
     [[ m ^ (entity_scope) : a_mult ]],
     [[ e ^ (entity_scope) : TTuple(e_type, e_mult, e_ord) ]],
     IsSubtype(a_type, e_type) == None() | error $[Type error: expected [a_type] got [e_type].]@e,
-    InBounds (a_mult, e_mult) == None() | error $[Multiplicity error: expected [a_mult] got [e_mult].]@e.
+    InBounds (a_mult, e_mult) == None() | error $[Multiplicity error: expected [a_mult] got [e_mult].]@e,
+    
+    new s,
+    Member{a} -> s,
+    s -S-> entity_scope,
+    s -I-> entity_scope,
+    Member{a} |-> a_overridden,
+    a_overridden : TTuple(a_overridden_type, a_overridden_mult, a_overridden_ord),
+    IsSubtype(a_overridden_type, a_type) == None() | error $[Overriding type error: expected [a_type] got [e_type].]@t,
+    InBounds (a_overridden_mult, a_mult) == None() | error $[Overriding multiplicity error: expected [a_mult] got [e_mult].]@m.
     
 rules // entity members: roles & inverses
     
@@ -155,7 +186,7 @@ rules // entity members: roles & inverses
     Entity{entity} |-> entity_def,
     entity_def : entity_type,
     Entity2{entity} <- module_scope,
-    Entity2{entity} =I=> entity2_scope,
+    Entity2{entity} =E=> entity2_scope,
     Member{inverse} <- entity2_scope,
     Member{inverse} : TTuple(this_type, inverse_mult, inverse_ord),
     Member{inverse}.ns := Inverse(),
@@ -163,7 +194,8 @@ rules // entity members: roles & inverses
     Member{inverse}.reltype := None(),
     new entity2_scope,
     Member2{role} -> entity_scope,
-    Member2{role} <=I= entity2_scope, // import all shortcut definitions from the role associated scope into the entity2 scope
+    Member2{role} <=E= entity2_scope, 
+//    Member2{role} <=I= entity2_scope, // import all shortcut definitions from the role associated scope into the entity2 scope
     true.
 
 rules // entity members: shortcuts
@@ -175,7 +207,7 @@ rules // entity members: shortcuts
     role1_def.inversemult := role1_inverse_mult,
     role1_def.inverseord  := role1_inverse_ord,
     Member2{role1} <- entity_scope,
-    Member2{role1} =I=> role1_scope,
+    Member2{role1} =E=> role1_scope,
     Member{shortcut1} <- role1_scope,
     Member{shortcut1} : TTuple(role2_type, role1_inverse_mult, role1_inverse_ord),
     Member{shortcut1}.ns := Shortcut(),
@@ -189,7 +221,7 @@ rules // entity members: shortcuts
     role2_def.inversemult := role2_inverse_mult,
     role2_def.inverseord  := role2_inverse_ord,
     Member2{role2} <- entity_scope,
-    Member2{role2} =I=> role2_scope,
+    Member2{role2} =E=> role2_scope,
     Member{shortcut2} <- role2_scope,
     Member{shortcut2} : TTuple(role1_type, role2_inverse_mult, role2_inverse_ord),
     Member{shortcut2}.ns := Shortcut(),

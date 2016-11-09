@@ -2,6 +2,9 @@ module model
 
 rules // entities
 
+  // TODO: use a separate scope for inherited attributes, for proper duplicate checking + proper querying (as workaround until http://yellowgrass.org/issue/NaBL2/18 and http://yellowgrass.org/issue/NaBL2/21 are fixed)
+  // TODO: use a separate scope for external fields + local fields, for proper duplicate checking + proper querying (as workaround until http://yellowgrass.org/issue/NaBL2/18 and http://yellowgrass.org/issue/NaBL2/21 are fixed)
+  // TODO: use associated edges from the entity name to these scopes for proper querying (or get http://yellowgrass.org/issue/NaBL2/20 fix)
   [[ Entity(e, parents, as) ^ (module_scope) ]] :=
     distinct V(entity_scope)/Member | error "Duplicate attribute, relation, role, inverse, or shortcut names." @NAMES,
     distinct (W(entity_scope)/Member minus V(entity_scope)/Member) | error $[Conflicting attribute, relation, role, inverse, or shortcut names: [NAME]] @parents, 
